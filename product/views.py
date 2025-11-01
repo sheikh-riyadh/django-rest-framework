@@ -13,6 +13,7 @@ from rest_framework.viewsets import ModelViewSet
 from product.product_filter import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from product.pagination import DefaultPagination
 
 
 # This is call "FUNCTION VIEW"
@@ -154,6 +155,7 @@ class ProductViewSet(ModelViewSet):
     serializer_class = ProductModelSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
+    pagination_class = DefaultPagination
     search_fields = ['name', 'description']
     ordering_fields = ['price']
 
