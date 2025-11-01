@@ -10,6 +10,7 @@ class CategoriesSerializer(serializers.Serializer):
     description = serializers.CharField()
 
 
+
 # This is called "Serializer"
 class ProductSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -41,7 +42,6 @@ class ProductSerializer(serializers.Serializer):
 
     def calculate(self, product):
         return round(product.price * Decimal(1.1))
-
 
 
 

@@ -10,6 +10,9 @@ from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.viewsets import ModelViewSet
+from product.product_filter import ProductFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 # This is call "FUNCTION VIEW"
@@ -149,6 +152,14 @@ class GenericProductView (ListCreateAPIView):
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.select_related('category').all()
     serializer_class = ProductModelSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = ProductFilter
+    search_fields = ['name', 'description']
+    ordering_fields = ['price']
+
+
+
+    
 
 
 

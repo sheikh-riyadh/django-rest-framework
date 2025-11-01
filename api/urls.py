@@ -4,8 +4,8 @@ from product.views import ProductViewSet, ReviewViewSet
 from rest_framework_nested import routers
 
 router = routers.DefaultRouter()
-router.register('products', ProductViewSet)
-router.register('review', ReviewViewSet)
+router.register('products', ProductViewSet, basename='products')
+router.register('review', ReviewViewSet, basename='product-review')
 
 product_router = routers.NestedDefaultRouter(router, 'products', lookup='product')
 product_router.register('review', ReviewViewSet, basename='product-review')
