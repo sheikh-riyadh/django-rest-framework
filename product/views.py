@@ -161,11 +161,6 @@ class ProductViewSet(ModelViewSet):
 
 
 
-    
-
-
-
-
 class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
     queryset = Review.objects.select_related('product').all()
@@ -175,3 +170,9 @@ class ReviewViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         return {'product_id': self.kwargs.get('product_pk')}
+    
+
+
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategoryModelSerializer
