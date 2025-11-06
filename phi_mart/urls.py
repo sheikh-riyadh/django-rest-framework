@@ -3,11 +3,13 @@ from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 from debug_toolbar.toolbar import debug_toolbar_urls
+from .views import ApiRoot
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', ApiRoot.as_view()),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls'), name='api-root')
 ] + debug_toolbar_urls()
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

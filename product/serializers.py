@@ -85,5 +85,5 @@ class ReviewSerializer(serializers.ModelSerializer):
         except Product.DoesNotExist:
             raise serializers.ValidationError('Invalid product ID')
         
-        return Review.objects.create(product=product **validated_data)
+        return Review.objects.create(product=product, **validated_data)
             
