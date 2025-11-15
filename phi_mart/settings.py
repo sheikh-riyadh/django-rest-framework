@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,11 +139,13 @@ REST_FRAMEWORK={
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
+   "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
 }
 
 
 DJOSER = {
     'SERIALIZERS': {
          'user_create': 'users.serializer.UserCreateSerializer',
+         'current_user': 'users.serializer.CurrentUserSerializer',
     },
 }
