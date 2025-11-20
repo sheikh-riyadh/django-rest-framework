@@ -8,8 +8,6 @@ from .views import ApiRoot
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', ApiRoot.as_view()),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
     path('api/', include('api.urls'), name='api-root'),
 ] + debug_toolbar_urls()
 
