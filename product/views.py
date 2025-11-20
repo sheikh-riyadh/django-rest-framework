@@ -14,6 +14,8 @@ from product.product_filter import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from product.pagination import DefaultPagination
+from api.permissions import AdminOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAdminUser
 
 
 # This is call "FUNCTION VIEW"
@@ -158,6 +160,8 @@ class ProductViewSet(ModelViewSet):
     pagination_class = DefaultPagination
     search_fields = ['name', 'description']
     ordering_fields = ['price']
+    permission_classes = [AdminOrReadOnly]
+    http_method_names = ['get', 'post', 'delete', 'patch']
 
 
 
@@ -171,8 +175,14 @@ class ReviewViewSet(ModelViewSet):
     def get_serializer_context(self):
         return {'product_id': self.kwargs.get('product_pk')}
     
+    def get_permissions(self):
+       if self.request.method == 'GET':
+           return [AllowAny()]
+       return [IsAdminUser()]
+    
 
 
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
