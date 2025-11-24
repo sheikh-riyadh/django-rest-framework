@@ -14,9 +14,8 @@ from product.product_filter import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from product.pagination import DefaultPagination
-from api.permissions import AdminOrReadOnly
+from api.permissions import AdminOrReadOnly, IsReviewAuthorOrReadyOnly
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAdminUser
-
 
 # This is call "FUNCTION VIEW"
 @api_view()
@@ -168,6 +167,13 @@ class ProductViewSet(ModelViewSet):
 class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
     queryset = Review.objects.select_related('product').all()
+    permission_classes = [IsReviewAuthorOrReadyOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
 
     def get_queryset(self):
         return self.queryset.filter(product_id=self.kwargs.get('product_pk'))
@@ -175,10 +181,13 @@ class ReviewViewSet(ModelViewSet):
     def get_serializer_context(self):
         return {'product_id': self.kwargs.get('product_pk')}
     
-    def get_permissions(self):
-       if self.request.method == 'GET':
-           return [AllowAny()]
-       return [IsAdminUser()]
+
+    
+    
+    # def get_permissions(self):
+    #    if self.request.method == 'GET':
+    #        return [AllowAny()]
+    #    return [IsAdminUser()]
     
 
 
