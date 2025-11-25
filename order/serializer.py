@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from order.models import Cart, CartItem
+from order.models import Cart, CartItem,Order,OrderItem
 from product.models import Product
 
 
@@ -70,6 +70,21 @@ class CartSerializer(serializers.ModelSerializer):
         total = sum(list([item.product.price * item.quantity for item in cart.item.all()]))
         return total
    
+
+
+
+class OrderItemsSerializer(serializers.ModelSerializer):
+    product = SimpleProductSerializer()
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'order', 'product', 'quantity', 'price', 'total_price']
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemsSerializer(many=True)
+    class Meta:
+        model = Order
+        fields = ['id', 'user', 'status', 'total_price', 'created_at', 'items']
 
 
 

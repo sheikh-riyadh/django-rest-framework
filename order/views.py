@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.viewsets import GenericViewSet,ModelViewSet
 from rest_framework.mixins import RetrieveModelMixin,DestroyModelMixin,CreateModelMixin
-from order.models import Cart, CartItem
-from order.serializer import CartSerializer, CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer
+from order.models import Cart, CartItem, Order, OrderItem
+from order.serializer import CartSerializer, CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer, OrderSerializer
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
@@ -11,7 +11,7 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Cart.objects.prefetch_related('item').filter(user=self.request.user).all()
+        return Cart.objects.prefetch_related('item__product').filter(user=self.request.user).all()
 
 
 class CartItemViewSet(ModelViewSet):
@@ -34,3 +34,15 @@ class CartItemViewSet(ModelViewSet):
        items = CartItem.objects.filter(cart_id=self.kwargs.get('cart_pk')).all()
        return items
 
+
+
+class OrderViewSet(ModelViewSet):
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            Order.objects.prefetch_related('items__product').all()
+        return Order.objects.prefetch_related('items__product').filter(user=self.request.user)
+        
+    
